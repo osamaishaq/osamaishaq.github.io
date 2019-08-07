@@ -51,6 +51,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var AppRoutes = [
     { path: 'HomePage', component: _home_page_component_home_page_component_component__WEBPACK_IMPORTED_MODULE_3__["HomePageComponentComponent"] },
+    { path: 'HomePage/:id/:name', component: _home_page_component_home_page_component_component__WEBPACK_IMPORTED_MODULE_3__["HomePageComponentComponent"] },
     { path: 'DetailPage/:id', component: _detail_page_component_detail_page_component_component__WEBPACK_IMPORTED_MODULE_6__["DetailPageComponentComponent"] },
     { path: 'MyAccount', component: _my_account_component_my_account_component_component__WEBPACK_IMPORTED_MODULE_0__["MyAccountComponentComponent"] },
     { path: 'DemoPage', component: _demo_page_component_demo_page_component_component__WEBPACK_IMPORTED_MODULE_5__["DemoPageComponentComponent"] },
@@ -930,7 +931,7 @@ module.exports = ".mystle{\r\n  background-color: #222;\r\n    color: #fff;\r\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"page-content\" class=\"single-page\">\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-lg-12\">\n                <ul class=\"breadcrumb\">\n                    <li><a href=\"index.html\">Home</a></li>\n                    <li><a href=\"account.html\">Account Login</a></li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"heading\">\n                    <h2>Login</h2>\n                </div>\n                <form name=\"form1\" id=\"ff1\" method=\"post\" #f=\"ngForm\" (ngSubmit)=\"signIn(f.value)\">\n                    <div class=\"form-group\">\n                        <input type=\"text\" ngModel class=\"form-control\" placeholder=\"Username :\" name=\"username\" id=\"username\" required>\n                    </div>\n                    <div class=\"form-group\">\n                        <input type=\"password\" ngModel class=\"form-control\" placeholder=\"Password :\" name=\"password\" id=\"password\" required>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-1 mystle \" name=\"login\" id=\"login\">Login</button>\n                    <a> Forgot Your Password ?</a>\n                </form>\n            </div>\n            <div class=\"alert alert-success\" *ngIf=\"showSuccessMessage\">\n                <strong> Successfully</strong> Loggedin.\n                <div class=\"alert alert-info\">\n                    <strong>Welcome!</strong> {{ fullName}}\n                </div>\n            </div>\n\n            <div class=\"alert alert-danger\" *ngIf=\"showFailureMessage\">\n                <strong>Invalid!</strong> login.\n            </div>\n\n\n        </div>\n\n    </div>\n</div>"
+module.exports = "<div id=\"page-content\" class=\"single-page\">\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-lg-12\">\n                <ul class=\"breadcrumb\">\n                    <li><a href=\"index.html\">Home</a></li>\n                    <li><a href=\"account.html\">Account Login</a></li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"heading\">\n                    <h2>Login</h2>\n                </div>\n                <form name=\"form1\" id=\"ff1\" method=\"post\" #f=\"ngForm\" (ngSubmit)=\"signIn(f.value)\">\n                    <div class=\"form-group\">\n                        <input type=\"text\" ngModel class=\"form-control\" placeholder=\"Username/Full Name :\" name=\"username\" id=\"username\" required>\n                    </div>\n                    <div class=\"form-group\">\n                        <input type=\"password\" ngModel class=\"form-control\" placeholder=\"Password :\" name=\"password\" id=\"password\" required>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-1 mystle \" name=\"login\" id=\"login\">Login</button>\n                    <a> Forgot Your Password ?</a>\n                </form>\n            </div>\n            <div class=\"alert alert-success\" *ngIf=\"showSuccessMessage\">\n                <strong> Successfully</strong> Loggedin.\n                <div class=\"alert alert-info\">\n                    <strong>Welcome!</strong> {{ fullName}}\n                </div>\n            </div>\n\n            <div class=\"alert alert-danger\" *ngIf=\"showFailureMessage\">\n                <strong>Invalid!</strong> login.\n            </div>\n\n\n        </div>\n\n    </div>\n</div>"
 
 /***/ }),
 
@@ -982,14 +983,14 @@ var MyAccountComponentComponent = /** @class */ (function () {
                 return __assign({ $key: item.key }, item.payload.val());
             });
         });
+        // console.log("Ong");
     };
     MyAccountComponentComponent.prototype.signIn = function (f) {
         var _this = this;
-        //console.log(f.username);
-        //console.log(f.password);
-        //console.log(this.customerArray);
+        //  this.allCustomerArray.forEach(lol => {
         this.allCustomerArray.forEach(function (value) {
             if (value.fullName === f.username && value.confirmPassword === f.password) {
+                console.log('OK');
                 _this.key = value.$key;
                 _this.confirmPassword = value.confirmPassword;
                 _this.email = value.email;
@@ -999,25 +1000,21 @@ var MyAccountComponentComponent = /** @class */ (function () {
                 _this.showSuccessMessage = true;
                 _this.result = true;
                 setTimeout(function () { return _this.showSuccessMessage = false; }, 3000);
-                //  console.log(value.fullName);
-                //  cartProduct.push(value);
             }
         });
+        //  });
         if (this.result) {
-            this.firebaseService.setCurrentUserLoginInfo(this.fullName, true);
-            setTimeout(function () { return _this.router.navigate(['/']); }, 3000);
-            // this.router.navigate(['/']);
-            //    this.showFailureMessage = true;
-            //    setTimeout(() => this.showFailureMessage = false, 3000);
+            this.allCustomerArray = [];
+            //console.log(this.allCustomerArray, " Destroyed");
+            // tslint:disable-next-line: max-line-length
+            this.firebaseService.setCurrentUserLoginInfo(this.key, this.confirmPassword, this.email, this.fullName, this.location, this.mobile, true);
+            setTimeout(function () { return _this.router.navigate(['/HomePage', _this.key, _this.fullName]); }, 3000);
+            setTimeout(function () { return _this.showSuccessMessage = false; }, 3000);
         }
         else {
             this.showFailureMessage = true;
             setTimeout(function () { return _this.showFailureMessage = false; }, 3000);
         }
-        console.log(this.key);
-        console.log(this.confirmPassword);
-        console.log(this.fullName);
-        console.log(this.email);
     };
     MyAccountComponentComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1089,7 +1086,8 @@ var NavBarComponent = /** @class */ (function () {
     }
     NavBarComponent.prototype.myClickFunction = function (event) {
         alert("Are you sure you want loggeout");
-        console.log(event);
+        // console.log(event);
+        this.firebaseService.setCurrentUserLoginInfo('', '', '', '', '', '', false);
         this.router.navigate(['MyAccount']);
     };
     NavBarComponent.prototype.ngOnInit = function () {
@@ -1138,10 +1136,14 @@ var cartProduct = [];
 var FirebaseService = /** @class */ (function () {
     function FirebaseService(firebase) {
         this.firebase = firebase;
-        this.fullName = '';
     }
-    FirebaseService.prototype.setCurrentUserLoginInfo = function (fullName, isLoggedIn) {
+    FirebaseService.prototype.setCurrentUserLoginInfo = function (key, confirmPassword, email, fullName, location, mobile, isLoggedIn) {
+        this.key = key;
+        this.confirmPassword = confirmPassword;
+        this.email = email;
         this.fullName = fullName;
+        this.location = location;
+        this.mobile = mobile;
         this.isLoggedIn = isLoggedIn;
     };
     FirebaseService.prototype.getCurrentUserLoginName = function () {
